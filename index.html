@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ROSE · Floricultura Premium</title>
+  
+  <!-- ===== CSS EXTERNO ===== -->
+  <link rel="stylesheet" href="style.css">
+  
+  <!-- ===== FONTS & ICONS ===== -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+
+  <!-- Pétalas -->
+  <canvas id="petals-canvas"></canvas>
+
+  <!-- TOAST -->
+  <div class="toast" id="toast">
+    <i class="fas fa-check-circle"></i>
+    <div class="toast-content">
+      <div class="toast-title" id="toastTitle">Adicionado ao carrinho!</div>
+      <div class="toast-sub" id="toastSub">Produto adicionado com sucesso</div>
+    </div>
+  </div>
+
+  <!-- ===== HEADER ===== -->
+  <header id="main-header">
+    <div class="logo" data-page="home">ROSE</div>
+    <nav class="nav-left">
+      <a href="#" data-page="home" class="active">Início</a>
+      <a href="#" data-page="categorias">Categorias</a>
+      <a href="#" data-page="ocasioes">Ocasiões</a>
+      <a href="#" data-page="monte-buque">Monte seu Buquê</a>
+      <a href="#" data-page="favoritos">Favoritos</a>
+      <a href="#" data-page="sobre">Sobre</a>
+      <a href="#" data-page="contato">Contato</a>
+    </nav>
+    <div class="nav-right">
+      <div class="header-icons">
+        <i class="fas fa-shopping-cart" id="cartIcon">
+          <span class="cart-badge" id="cartBadge">0</span>
+        </i>
+        <i class="fas fa-heart" onclick="navegar('favoritos')"></i>
+        <i class="fab fa-whatsapp" onclick="window.open('https://wa.me/5511999998888','_blank')"></i>
+      </div>
+    </div>
+  </header>
+
+  <!-- ===== PÁGINA HOME ===== -->
+  <div id="home" class="page active">
+    <!-- HERO CARROSSEL -->
+    <section class="hero" id="heroCarousel">
+      <div class="hero-slides" id="heroSlides">
+        <div class="hero-slide active" style="background-image: url('imagens/hero/hero.png');"></div>
+        <div class="hero-slide" style="background-image: url('imagens/hero/hero2.png');"></div>
+      </div>
+
+      <div class="hero-content">
+        <div class="marca">Rose</div>
+        <h1>Flores que contam<br>histórias de amor</h1>
+        <p>Arranjos exclusivos, criados com delicadeza e sofisticação para momentos inesquecíveis.</p>
+        <div class="btn-group">
+          <button class="btn btn-primary" onclick="abrirCarrinho()"><i class="fas fa-shopping-bag"></i> Comprar Agora</button>
+          <button class="btn btn-outline" onclick="navegar('monte-buque')"><i class="fas fa-seedling"></i> Monte seu Buquê</button>
+        </div>
+      </div>
+
+      <div class="hero-indicadores" id="heroIndicadores">
+        <span class="dot active" data-index="0"></span>
+        <span class="dot" data-index="1"></span>
+      </div>
+    </section>
+
+    <!-- SOBRE -->
+    <section class="secao-rosa-claro">
+      <div class="sobre-home">
+        <h2>Sobre a ROSE</h2>
+        <p class="sub">A ROSE nasceu do amor pelas flores e pela arte de encantar. Cada arranjo é criado com dedicação, utilizando as melhores flores e a mais refinada apresentação. Nossa missão é transformar momentos em memórias eternas através da beleza natural.</p>
+        <div class="sobre-grid">
+          <div class="sobre-card">
+            <i class="fas fa-flower"></i>
+            <h4>Flores Premium</h4>
+            <p>Selecionamos as melhores flores frescas diretamente dos melhores produtores.</p>
+          </div>
+          <div class="sobre-card">
+            <i class="fas fa-paint-brush"></i>
+            <h4>Arranjos Artesanais</h4>
+            <p>Cada arranjo é criado manualmente por nossos floristas especializados.</p>
+          </div>
+          <div class="sobre-card">
+            <i class="fas fa-heart"></i>
+            <h4>Amor em Cada Detalhe</h4>
+            <p>Cuidamos de cada detalhe para que sua experiência seja inesquecível.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CATEGORIAS -->
+    <section class="secao-branca">
+      <div class="categorias-home">
+        <h2>Coleções</h2>
+        <p class="sub">Escolha a essência que mais combina com você</p>
+        <div class="grid-categorias" id="categoriasGrid"></div>
+      </div>
+    </section>
+
+    <!-- MAIS VENDIDOS -->
+    <section class="secao-rosa-claro">
+      <div class="mais-vendidos">
+        <div class="section-header">
+          <h2>Mais Vendidos</h2>
+          <p class="sub">Os buquês que conquistaram os corações dos nossos clientes</p>
+        </div>
+        <div class="grid-mais-vendidos" id="maisVendidosGrid"></div>
+      </div>
+    </section>
+  </div>
+
+  <!-- ===== PÁGINA CATEGORIAS ===== -->
+  <div id="categorias" class="page">
+    <div class="categorias-layout">
+      <aside class="sidebar">
+        <h3><i class="fas fa-filter"></i> Filtros</h3>
+        <div class="filter-group">
+          <label>Categoria</label>
+          <select id="categoriaFilter" onchange="renderProdutos()">
+            <option value="todas">Todas</option>
+            <option value="Buquês Temáticos">Buquês Temáticos</option>
+            <option value="Girassóis">Girassóis</option>
+            <option value="Rosas">Rosas</option>
+            <option value="Orquídeas">Orquídeas</option>
+            <option value="Adicionais">Adicionais</option>
+          </select>
+        </div>
+        <div class="filter-group">
+          <label>Preço máximo</label>
+          <input type="range" min="60" max="500" value="500" id="priceFilter">
+          <div class="range-values">
+            <span>R$ 60</span>
+            <span id="priceValue">R$ 500</span>
+          </div>
+        </div>
+        <div id="filtrosEspecificos"></div>
+      </aside>
+      <div class="produtos-grid" id="produtosGrid"></div>
+    </div>
+  </div>
+
+  <!-- ===== PÁGINA OCASIÕES ===== -->
+  <div id="ocasioes" class="page">
+    <div class="ocasioes-header">
+      <h2><i class="fas fa-calendar-check" style="color:var(--vinho);"></i> Ocasiões Especiais</h2>
+      <p class="sub">Encontre o arranjo perfeito para cada momento da vida</p>
+    </div>
+    <div class="ocasioes-filtros" id="ocasioesFiltros">
+      <button class="filtro-btn active" data-ocasiao="todas">Todas as Ocasiões</button>
+      <button class="filtro-btn" data-ocasiao="casamento">Casamento</button>
+      <button class="filtro-btn" data-ocasiao="namorados">Dia dos Namorados</button>
+      <button class="filtro-btn" data-ocasiao="maes">Dia das Mães</button>
+      <button class="filtro-btn" data-ocasiao="pais">Dia dos Pais</button>
+      <button class="filtro-btn" data-ocasiao="nascimento">Nascimento</button>
+      <button class="filtro-btn" data-ocasiao="condolencias">Condolências</button>
+    </div>
+    <div class="ocasioes-grid" id="ocasioesGrid"></div>
+  </div>
+
+  <!-- ===== PÁGINA FAVORITOS ===== -->
+  <div id="favoritos" class="page">
+    <div class="favoritos-header">
+      <h2><i class="fas fa-heart" style="color:#ff4757;"></i> Meus Favoritos</h2>
+      <p class="sub">Seus produtos favoritos salvos aqui</p>
+    </div>
+    <div class="favoritos-grid" id="favoritosGrid"></div>
+  </div>
+
+  <!-- ===== PÁGINA MONTE SEU BUQUÊ ===== -->
+  <div id="monte-buque" class="page">
+    <div class="builder-container">
+      <div class="builder-progress" id="builderProgress">
+        <div class="step-indicator">
+          <div class="step-dot-wrapper">
+            <div class="step-dot active" data-step="1">1</div>
+            <span class="step-label active" data-step="1">Flores</span>
+          </div>
+          <div class="step-line" data-between="1-2"></div>
+          <div class="step-dot-wrapper">
+            <div class="step-dot" data-step="2">2</div>
+            <span class="step-label" data-step="2">Embalagem</span>
+          </div>
+          <div class="step-line" data-between="2-3"></div>
+          <div class="step-dot-wrapper">
+            <div class="step-dot" data-step="3">3</div>
+            <span class="step-label" data-step="3">Laço</span>
+          </div>
+          <div class="step-line" data-between="3-4"></div>
+          <div class="step-dot-wrapper">
+            <div class="step-dot" data-step="4">4</div>
+            <span class="step-label" data-step="4">Adicionais</span>
+          </div>
+          <div class="step-line" data-between="4-5"></div>
+          <div class="step-dot-wrapper">
+            <div class="step-dot" data-step="5">5</div>
+            <span class="step-label" data-step="5">Finalizar</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="builder-layout-duplo">
+        <div class="builder-left">
+          <!-- Etapa 1: Flores -->
+          <div class="builder-step active" data-step="1">
+            <h3 class="step-title">🌸 Escolha suas Flores</h3>
+            <p class="step-sub">Selecione a quantidade de cada flor para seu buquê personalizado</p>
+            <div class="builder-opcoes-grid" id="floresGrid"></div>
+            <div class="builder-navegacao">
+              <span></span>
+              <button class="btn btn-primary" onclick="proximoStep()">Próximo <i class="fas fa-arrow-right"></i></button>
+            </div>
+          </div>
+
+          <!-- Etapa 2: Embalagem -->
+          <div class="builder-step" data-step="2">
+            <h3 class="step-title">📦 Escolha a Embalagem</h3>
+            <p class="step-sub">Selecione a embalagem que vai envolver seu buquê</p>
+            <div class="builder-opcoes-grid" id="embalagensGrid"></div>
+            <div class="builder-navegacao">
+              <button class="btn btn-outline" onclick="stepAnterior()"><i class="fas fa-arrow-left"></i> Voltar</button>
+              <button class="btn btn-primary" onclick="proximoStep()">Próximo <i class="fas fa-arrow-right"></i></button>
+            </div>
+          </div>
+
+          <!-- Etapa 3: Laço -->
+          <div class="builder-step" data-step="3">
+            <h3 class="step-title">🎀 Escolha o Laço</h3>
+            <p class="step-sub">Selecione o laço que vai finalizar seu buquê</p>
+            <div class="builder-opcoes-grid" id="lacosGrid"></div>
+            <div class="builder-navegacao">
+              <button class="btn btn-outline" onclick="stepAnterior()"><i class="fas fa-arrow-left"></i> Voltar</button>
+              <button class="btn btn-primary" onclick="proximoStep()">Próximo <i class="fas fa-arrow-right"></i></button>
+            </div>
+          </div>
+
+          <!-- Etapa 4: Adicionais -->
+          <div class="builder-step" data-step="4">
+            <h3 class="step-title">🎁 Adicionais</h3>
+            <p class="step-sub">Personalize ainda mais seu pedido com opções extras</p>
+            <div class="builder-adicionais" id="adicionaisContainer">
+              <div class="builder-adicional-card" id="cardCartao">
+                <div class="adicional-header">
+                  <h4><i class="fas fa-heart"></i> Cartão Personalizado</h4>
+                  <div class="switch" id="switchCartaoBuilder" onclick="toggleAdicional('cartao')">
+                    <div class="slider"></div>
+                  </div>
+                </div>
+                <div class="adicional-opcoes" id="opcoesCartao">
+                  <label style="font-size:0.8rem;font-weight:500;color:#5e4e4e;">Escreva sua mensagem:</label>
+                  <textarea id="mensagemCartaoBuilder" placeholder="Digite a mensagem que deseja enviar..."></textarea>
+                  <label style="font-size:0.8rem;font-weight:500;color:#5e4e4e;margin-top:8px;">Cor do cartão:</label>
+                  <div class="cor-opcoes" id="coresCartaoBuilder"></div>
+                </div>
+              </div>
+              <div class="builder-adicional-card" id="cardUrsinho">
+                <div class="adicional-header">
+                  <h4><i class="fas fa-paw"></i> Ursinho de Pelúcia</h4>
+                  <div class="switch" id="switchUrsinhoBuilder" onclick="toggleAdicional('ursinho')">
+                    <div class="slider"></div>
+                  </div>
+                </div>
+                <div class="adicional-opcoes" id="opcoesUrsinho">
+                  <label style="font-size:0.8rem;font-weight:500;color:#5e4e4e;">Cor do ursinho:</label>
+                  <div class="cor-opcoes" id="coresUrsinhoBuilder"></div>
+                </div>
+              </div>
+            </div>
+            <div style="font-size:0.8rem;color:#7a6a6a;margin-top:8px;text-align:center;">
+              <i class="fas fa-info-circle"></i> Os adicionais são opcionais. Você pode pular esta etapa.
+            </div>
+            <div class="builder-navegacao">
+              <button class="btn btn-outline" onclick="stepAnterior()"><i class="fas fa-arrow-left"></i> Voltar</button>
+              <div style="display:flex;gap:10px;">
+                <button class="btn btn-outline" onclick="proximoStep()">Pular <i class="fas fa-forward"></i></button>
+                <button class="btn btn-success" onclick="proximoStep()"><i class="fas fa-check"></i> Finalizar</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Etapa 5: Finalização -->
+          <div class="builder-step" data-step="5">
+            <h3 class="step-title">✅ Resumo do seu Buquê</h3>
+            <p class="step-sub">Revise seu pedido personalizado antes de finalizar</p>
+            <div class="builder-resumo" id="builderResumo"></div>
+            <div style="margin-top:20px;display:flex;gap:12px;flex-wrap:wrap;">
+              <button class="btn btn-outline" onclick="stepAnterior()" style="flex:1;"><i class="fas fa-arrow-left"></i> Voltar</button>
+              <button class="btn btn-primary" onclick="finalizarBuqueCompleto()" style="flex:2;"><i class="fab fa-whatsapp"></i> Enviar Pedido pelo WhatsApp</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Painel direito: Visualização do Buquê -->
+        <div class="builder-right">
+          <h3>👀 Visualização do Buquê</h3>
+          <div class="builder-preview-buque" id="builderPreviewBuque">
+            <div class="vazio">
+              <i class="fas fa-leaf"></i>
+              Adicione flores ao seu buquê
+            </div>
+          </div>
+          <div class="builder-resumo-flores" id="builderResumoFlores"></div>
+          <div style="margin-top:12px;font-size:0.8rem;color:#7a6a6a;text-align:center;">
+            <i class="fas fa-info-circle"></i> Selecione as flores na etapa 1
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== PÁGINAS SOBRE E CONTATO ===== -->
+  <div id="sobre" class="page" style="padding:120px 40px 60px; max-width:800px;margin:0 auto; background:#FFFFFF;">
+    <h1 style="font-family:'Playfair Display',serif;color:var(--vinho);">Sobre a ROSE</h1>
+    <p style="font-weight:300;line-height:1.8;margin-top:20px;">A ROSE nasceu do amor pelas flores e pela arte de encantar. Cada arranjo é criado com dedicação, utilizando as melhores flores e a mais refinada apresentação. Nossa missão é transformar momentos em memórias eternas através da beleza natural.</p>
+    <p style="font-weight:300;line-height:1.8;margin-top:16px;">Com mais de 10 anos de experiência, somos referência em floricultura premium, atendendo clientes que buscam sofisticação e exclusividade em cada detalhe.</p>
+  </div>
+
+  <div id="contato" class="page" style="padding:120px 40px 60px; max-width:800px;margin:0 auto;">
+    <h1 style="font-family:'Playfair Display',serif;color:var(--vinho);">Contato</h1>
+    <p style="font-weight:300;margin-top:20px;"><i class="fas fa-phone-alt" style="color:var(--vinho);width:24px;"></i> (11) 4002-8922</p>
+    <p style="font-weight:300;"><i class="fab fa-whatsapp" style="color:var(--vinho);width:24px;"></i> (11) 9 9999-8888</p>
+    <p style="font-weight:300;"><i class="fas fa-envelope" style="color:var(--vinho);width:24px;"></i> contato@roseflores.com</p>
+    <p style="font-weight:300;margin-top:16px;">Atendimento: Segunda a Sábado, das 9h às 20h.</p>
+  </div>
+
+  <!-- ===== CARRINHO ===== -->
+  <div class="cart-overlay" id="cartOverlay">
+    <div class="cart-header">
+      <span><i class="fas fa-shopping-bag"></i> Carrinho</span>
+      <i class="fas fa-times" onclick="fecharCarrinho()"></i>
+    </div>
+    <div id="cartItems"></div>
+    <div class="cart-total">
+      <div class="total-row">
+        <span>Total</span>
+        <span class="valor" id="cartTotal">R$ 0,00</span>
+      </div>
+      <button class="btn-finalizar" onclick="abrirModalEntrega()">
+        <i class="fas fa-truck"></i> Finalizar Pedido
+      </button>
+    </div>
+  </div>
+
+  <!-- ===== MODAL ENTREGA ===== -->
+  <div class="modal-entrega" id="modalEntrega">
+    <div class="modal-content">
+      <i class="fas fa-times modal-close" onclick="fecharModalEntrega()"></i>
+      <h3><i class="fas fa-truck"></i> Opções de Entrega</h3>
+      
+      <div class="entrega-opcoes">
+        <div class="entrega-opcao active" onclick="selecionarEntrega('retirar')" id="opcaoRetirar">
+          <i class="fas fa-store"></i>
+          <div class="label">Retirar na Loja</div>
+          <div class="desc">Sem custo de frete</div>
+        </div>
+        <div class="entrega-opcao" onclick="selecionarEntrega('entregar')" id="opcaoEntregar">
+          <i class="fas fa-home"></i>
+          <div class="label">Receber em Casa</div>
+          <div class="desc">Com cálculo de frete</div>
+        </div>
+      </div>
+
+      <div id="entregaRetirar" style="display:block;">
+        <div style="background:#f8f0ee;padding:16px;border-radius:8px;margin-bottom:16px;">
+          <p style="font-weight:500;"><i class="fas fa-map-pin" style="color:var(--vinho);"></i> Rua das Flores, 1010</p>
+          <p style="font-size:0.9rem;color:#5e4e4e;">São Paulo - SP, 01234-567</p>
+          <p style="font-size:0.9rem;color:#5e4e4e;"><i class="far fa-clock"></i> Segunda a Sábado, 9h às 20h</p>
+        </div>
+      </div>
+
+      <div id="entregaEntregar" style="display:none;">
+        <div class="form-group">
+          <label>CEP</label>
+          <div style="display:flex;gap:8px;align-items:center;">
+            <input type="text" id="cepInput" placeholder="00000-000" style="flex:1;" onblur="buscarEnderecoPorCEP()" oninput="this.value=this.value.replace(/\D/g,'').replace(/^(\d{5})(\d{3})$/, '$1-$2')">
+            <button class="btn-calcular" onclick="calcularFrete()">Calcular</button>
+          </div>
+          <div id="freteResultado" style="margin-top:8px;"></div>
+        </div>
+        <div class="form-group">
+          <label>Cidade</label>
+          <input type="text" id="cidadeInput" placeholder="Digite sua cidade">
+        </div>
+        <div class="form-group">
+          <label>Rua</label>
+          <input type="text" id="ruaInput" placeholder="Digite sua rua">
+        </div>
+        <div class="form-group" style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+          <div>
+            <label>Número</label>
+            <input type="text" id="numeroInput" placeholder="Nº">
+          </div>
+          <div>
+            <label>Complemento</label>
+            <input type="text" id="complementoInput" placeholder="Opcional">
+          </div>
+        </div>
+        <div class="detalhes-entrega" id="detalhesEntrega">
+          <div class="form-group">
+            <label>Data desejada para entrega</label>
+            <input type="date" id="dataEntrega">
+          </div>
+          <div class="form-group">
+            <label>Horário preferencial</label>
+            <select id="horarioEntrega">
+              <option value="Manhã (8h-12h)">Manhã (8h-12h)</option>
+              <option value="Tarde (12h-17h)">Tarde (12h-17h)</option>
+              <option value="Noite (17h-20h)">Noite (17h-20h)</option>
+              <option value="Indiferente">Indiferente</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <div class="pagamento-info">
+        <h4><i class="fas fa-credit-card"></i> Pagamento</h4>
+        <p>O pagamento será realizado na entrega do pedido.</p>
+        <p style="margin-top:4px;">Aceitamos: <strong>PIX, Cartão de Crédito, Débito e Dinheiro</strong></p>
+        <p style="margin-top:4px;font-size:0.8rem;color:#7a6a6a;">
+          <i class="fas fa-clock"></i> Entregas realizadas até as <strong>20h</strong>
+        </p>
+        <p style="margin-top:2px;font-size:0.8rem;color:#7a6a6a;">
+          <i class="fas fa-truck"></i> Taxa de entrega: <span class="valor-frete" id="freteValorExibido">R$ 18,90</span>
+        </p>
+      </div>
+
+      <button class="btn-confirmar" onclick="confirmarEntrega()">
+        <i class="fas fa-check"></i> Confirmar e Finalizar
+      </button>
+    </div>
+  </div>
+
+  <!-- ===== MODAL CONFIRMAÇÃO ===== -->
+  <div class="modal-confirmacao" id="modalConfirmacao">
+    <div class="modal-content">
+      <div class="icon-grande">
+        <i class="fas fa-check-circle"></i>
+      </div>
+      <h2>Pedido Confirmado! 🌹</h2>
+      <p class="sub">Revise os detalhes do seu pedido antes de enviar</p>
+      <div class="resumo-pedido" id="resumoPedido"></div>
+      <div class="botoes">
+        <button class="btn-editar" onclick="fecharModalConfirmacao()"><i class="fas fa-edit"></i> Editar Pedido</button>
+        <button class="btn-confirmar-final" onclick="enviarPedidoWhatsApp()"><i class="fab fa-whatsapp"></i> Enviar Pedido pelo WhatsApp</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-produto" id="modalProduto">
+    <div class="modal-content">
+      <i class="fas fa-times modal-close" onclick="fecharModal()"></i>
+      <img src="" alt="" class="modal-main-img" id="modalMainImg">
+      <div class="modal-gallery" id="modalGallery"></div>
+      <h2 id="modalNome" style="font-family:'Playfair Display',serif;color:var(--vinho);"></h2>
+      <p id="modalDesc" style="font-weight:300;"></p>
+      <p style="font-weight:600;color:var(--vinho);font-size:1.4rem;" id="modalPreco"></p>
+      <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:12px;">
+        <button class="btn btn-primary" onclick="adicionarCarrinhoModal()">
+          <i class="fas fa-cart-plus"></i> Adicionar ao carrinho
+        </button>
+        <button class="btn btn-outline" onclick="personalizarProduto()">
+          <i class="fas fa-seedling"></i> Personalizar
+        </button>
+      </div>
+      <button class="btn btn-outline" style="width:100%;margin-top:16px;justify-content:center;" onclick="fecharModal(); navegar('home')">
+        <i class="fas fa-arrow-left"></i> Voltar ao Início
+      </button>
+    </div>
+  </div>
+
+  <!-- ===== RODAPÉ ===== -->
+  <footer>
+    <div class="footer-grid">
+      <div class="footer-col">
+        <h4>Contato</h4>
+        <p><i class="fas fa-phone-alt"></i> (11) 4002-8922</p>
+        <p><i class="fab fa-whatsapp"></i> (11) 9 9999-8888</p>
+        <p><i class="fas fa-envelope"></i> contato@roseflores.com</p>
+      </div>
+      <div class="footer-col">
+        <h4>Horário</h4>
+        <p><i class="far fa-calendar-alt"></i> Segunda a Sábado</p>
+        <p><i class="far fa-clock"></i> 9h às 20h</p>
+        <p><i class="fas fa-store"></i> Retirada na loja</p>
+        <p><i class="fas fa-truck"></i> Entregas até 20h</p>
+      </div>
+      <div class="footer-col">
+        <h4>Navegação</h4>
+        <div class="links-rapidos">
+          <a href="#" onclick="navegar('home')"><i class="fas fa-chevron-right"></i> Início</a>
+          <a href="#" onclick="navegar('categorias')"><i class="fas fa-chevron-right"></i> Categorias</a>
+          <a href="#" onclick="navegar('ocasioes')"><i class="fas fa-chevron-right"></i> Ocasiões</a>
+          <a href="#" onclick="navegar('monte-buque')"><i class="fas fa-chevron-right"></i> Monte seu Buquê</a>
+          <a href="#" onclick="navegar('contato')"><i class="fas fa-chevron-right"></i> Contato</a>
+        </div>
+        <div class="social-icons">
+          <a href="https://www.instagram.com/codebee.cb?igsh=MTZuN3l3ZzNxYnMxbg==" target="_blank" title="Instagram"><i class="fab fa-instagram"></i></a>
+          <a href="https://facebook.com/rosefloricultura" target="_blank" title="Facebook"><i class="fab fa-facebook-f"></i></a>
+          <a href="https://tiktok.com/@rosefloricultura" target="_blank" title="TikTok"><i class="fab fa-tiktok"></i></a>
+          <a href="https://wa.me/5511968300019" target="_blank" title="WhatsApp"><i class="fab fa-whatsapp"></i></a>
+        </div>
+      </div>
+      <div class="footer-col">
+        <h4>Localização</h4>
+        <p><i class="fas fa-map-pin"></i> Rua das Flores, 1010</p>
+        <p><i class="fas fa-city"></i> São Paulo - SP, 01234-567</p>
+        <a href="https://www.google.com/maps/dir//Rua+das+Flores,+1010,+São+Paulo" target="_blank" class="btn-maps">
+          <i class="fas fa-map-marked-alt"></i> Como Chegar
+        </a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>🐝 Site ficticio desenvolvido por Codebee. Todos os direitos reservados. <br>ostou do resultado?<br> Entre em contato conosco pelo e-mail:codebee.sites@gmail.com</p>
+    </div>
+  </footer>
+
+  <!-- ===== JAVASCRIPT EXTERNO ===== -->
+  <script src="script.js"></script>
+</body>
+</html>
